@@ -16,7 +16,7 @@ public class Reimbursement {
     private String description;
 
     @Column(nullable = false)
-    private int amount;
+    private double amount;
 
     private String status;
 
@@ -30,7 +30,7 @@ public class Reimbursement {
     public Reimbursement() {
     }
 
-    public Reimbursement(int reimbId, String description, int amount, String status, User user) {
+    public Reimbursement(int reimbId, String description, double amount, String status, User user) {
         this.reimbId = reimbId;
         this.description = description;
         this.amount = amount;
@@ -57,11 +57,11 @@ public class Reimbursement {
         this.description = description;
     }
 
-    public int getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
