@@ -26,11 +26,4 @@ public class ReimbursementController {
         return ResponseEntity.ok(reimbursement);
     }
 
-
-    //For IllegalArgumentException
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
 }

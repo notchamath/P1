@@ -25,10 +25,4 @@ public class UserController {
         return ResponseEntity.ok(registeredUser);
     }
 
-    //For IllegalArgumentException
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e){
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
 }
