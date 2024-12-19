@@ -1,17 +1,23 @@
 package com.revature.services;
 
+import com.revature.models.Reimbursement;
 import com.revature.models.User;
+import com.revature.repositories.ReimbursementDAO;
 import com.revature.repositories.UserDAO;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
     private final UserDAO userDAO;
+    private final ReimbursementDAO reimbursementDAO;
 
-    public UserService(UserDAO userDAO) {
+    public UserService(UserDAO userDAO, ReimbursementDAO reimbursementDAO) {
         this.userDAO = userDAO;
+        this.reimbursementDAO = reimbursementDAO;
     }
 
     public User registerUser(User user){
@@ -39,5 +45,25 @@ public class UserService {
         }
 
         return userDAO.save(user);
+    }
+
+
+    public List<Reimbursement> getUserReimbursements(int userId){
+        if(userId < 0) throw new IllegalArgumentException("User ID is not valid");
+
+        Optional<User> foundUser = userDAO.findById(userId);
+
+        if(foundUser.isEmpty()) {
+            throw new IllegalArgumentException("No user found by that ID");
+        } else {
+            return reimbursementDAO.findByUser_UserId(userId);
+        }
+
+    }
+
+    public List<Reimbursement> getUserPendingReimbursements(int userId){
+        List<Reimbursement> allReimbs = getUserReimbursements(userId);
+        return allReimbs.stream().filter(reimb -> reimb.getStatus().equals("pending"))
+                                                        .collect(Collectors.toList());
     }
 }
