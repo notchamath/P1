@@ -1,5 +1,8 @@
 package com.revature.controllers;
 
+import com.revature.aspects.ManagerOnly;
+import com.revature.models.DTOs.OutgoingReimbDTO;
+import com.revature.models.DTOs.OutgoingUserDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.User;
 import com.revature.services.UserService;
@@ -24,35 +27,34 @@ public class UserController {
 
     // Register User
     @PostMapping
-    public ResponseEntity<User> registerUser(@RequestBody User user){
-        User registeredUser = userService.registerUser(user);
-
-        return ResponseEntity.ok(registeredUser);
+    public ResponseEntity<OutgoingUserDTO> registerUser(@RequestBody User user){
+        return ResponseEntity.ok(userService.registerUser(user));
     }
 
     //Get all users
+    @ManagerOnly
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<OutgoingUserDTO>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     //Get user their own reimbursements, can filter by status of reimbursement
     @GetMapping("/{userId}/reimbursements")
-    public ResponseEntity<List<Reimbursement>> getUserReimbursements(@PathVariable("userId") int userId, @RequestParam(value = "status", required = false) String status){
+    public ResponseEntity<List<OutgoingReimbDTO>> getUserReimbursements(@PathVariable("userId") int userId, @RequestParam(value = "status", required = false) String status){
         return ResponseEntity.ok(userService.getUserReimbursements(userId, status));
     }
 
     // Delete User
+    @ManagerOnly
     @DeleteMapping("/{userId}")
-    public ResponseEntity<User> deleteUser(@PathVariable int userId){
-        User deletedUser = userService.deleteUser(userId);
-
-        return ResponseEntity.ok(deletedUser);
+    public ResponseEntity<OutgoingUserDTO> deleteUser(@PathVariable int userId){
+        return ResponseEntity.ok(userService.deleteUser(userId));
     }
 
     //Update User role
+    @ManagerOnly
     @PatchMapping("/{userId}/role")
-    ResponseEntity<User> updateUserRole(@PathVariable int userId, @RequestBody Map<String, Object> role){
+    ResponseEntity<OutgoingUserDTO> updateUserRole(@PathVariable int userId, @RequestBody Map<String, Object> role){
         String newRole = (String) role.get("role");
 
         return ResponseEntity.ok(userService.updateUserRole(userId, newRole));

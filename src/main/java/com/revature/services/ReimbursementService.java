@@ -25,7 +25,7 @@ public class ReimbursementService {
         this.userDAO = userDAO;
     }
 
-    public Reimbursement createReimbursement(IncomingReimbDTO reimbDTO){
+    public Reimbursement createReimbursement(IncomingReimbDTO reimbDTO, int loggedInUserId){
 
         if(reimbDTO.getDescription() == null || reimbDTO.getDescription().isBlank()){
             throw new IllegalArgumentException("Reimbursement Description cannot be blank or null");
@@ -37,6 +37,10 @@ public class ReimbursementService {
 
         if(reimbDTO.getUserId() == null){
             throw new IllegalArgumentException("Reimbursement UserId cannot be blank or null");
+        }
+
+        if(reimbDTO.getUserId() != loggedInUserId){
+            throw new IllegalArgumentException("Reimbursement can only belong to the logged in user");
         }
 
         Reimbursement reimbursement = new Reimbursement(
@@ -74,16 +78,20 @@ public class ReimbursementService {
         }
     }
 
-    public Reimbursement updateReimbDescription(int reimbId, String descriptionText){
-        Optional<Reimbursement> reimb = reimbursementDAO.findById(reimbId);
+    public Reimbursement updateReimbDescription(int reimbId, String descriptionText, int loggedInUserId){
+        Optional<Reimbursement> reimbOptional = reimbursementDAO.findById(reimbId);
 
-        if(!reimb.isEmpty() && !reimb.get().getStatus().equalsIgnoreCase("pending")){
+        if(!reimbOptional.isEmpty() && reimbOptional.get().getUser().getUserId() != loggedInUserId){
+            throw new IllegalArgumentException("The reimbursement entered does not belong to the logged in user with ID: " + loggedInUserId);
+        }
+
+        if(!reimbOptional.isEmpty() && !reimbOptional.get().getStatus().equalsIgnoreCase("pending")){
             throw new IllegalArgumentException("This reimbursement is has already been APPROVED or DENIED");
         }
 
-        if(!reimb.isEmpty() && descriptionText != null && !descriptionText.isBlank() && descriptionText.length() <= 255){
-            reimb.get().setDescription(descriptionText);
-            return reimbursementDAO.save(reimb.get());
+        if(!reimbOptional.isEmpty() && descriptionText != null && !descriptionText.isBlank() && descriptionText.length() <= 255){
+            reimbOptional.get().setDescription(descriptionText);
+            return reimbursementDAO.save(reimbOptional.get());
         } else {
             throw new IllegalArgumentException("Reimbursement could not be updated. Please check Description and ID");
         }

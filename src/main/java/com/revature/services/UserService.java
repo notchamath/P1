@@ -1,5 +1,7 @@
 package com.revature.services;
 
+import com.revature.models.DTOs.OutgoingReimbDTO;
+import com.revature.models.DTOs.OutgoingUserDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.User;
 import com.revature.repositories.ReimbursementDAO;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,7 +25,7 @@ public class UserService {
         this.reimbursementDAO = reimbursementDAO;
     }
 
-    public User registerUser(User user){
+    public OutgoingUserDTO registerUser(User user){
 
         User foundUser = userDAO.findByUserName(user.getUserName());
 
@@ -46,16 +49,30 @@ public class UserService {
             throw new IllegalArgumentException("User Password cannot be blank or null");
         }
 
-        return userDAO.save(user);
+        User newUser = userDAO.save(user);
+
+        return new OutgoingUserDTO(newUser.getUserId(), newUser.getUserName(), newUser.getRole());
     }
 
 
-    public List<User> getAllUsers(){
-        return userDAO.findAll(Sort.by("userId").ascending());
+    public List<OutgoingUserDTO> getAllUsers(){
+        List<User> users = userDAO.findAll(Sort.by("userId").ascending());
+
+        List<OutgoingUserDTO> outgoingUsers = new ArrayList<>();
+
+        for(User user: users){
+            outgoingUsers.add(new OutgoingUserDTO(
+                    user.getUserId(),
+                    user.getUserName(),
+                    user.getRole()
+            ));
+        }
+
+        return outgoingUsers;
     }
 
 
-    public List<Reimbursement> getUserReimbursements(int userId, String status){
+    public List<OutgoingReimbDTO> getUserReimbursements(int userId, String status){
 
         if (userId < 0) throw new IllegalArgumentException("User ID is not valid");
 
@@ -63,42 +80,70 @@ public class UserService {
 
         if (foundUser.isEmpty()) {
             throw new IllegalArgumentException("No user found by that ID");
+        }
+
+        List<Reimbursement> reimbursements = reimbursementDAO.findByUser_UserId(userId);
+        List<OutgoingReimbDTO> outgoingReimbs = new ArrayList<>();
+        for(Reimbursement reimb: reimbursements){
+            outgoingReimbs.add(
+                    new OutgoingReimbDTO(
+                            reimb.getReimbId(),
+                            reimb.getDescription(),
+                            reimb.getAmount(),
+                            reimb.getStatus(),
+                            reimb.getUser().getUserId()
+                    )
+            );
+        }
+
+        if(status == null || status.isEmpty()) {
+            return outgoingReimbs;
         } else {
-            if(status == null || status.isEmpty()) {
-                return reimbursementDAO.findByUser_UserId(userId);
-            } else {
-                if(!status.equalsIgnoreCase("pending")
-                        && !status.equalsIgnoreCase("approved")
-                        && !status.equalsIgnoreCase("denied")
-                ){
-                    throw new IllegalArgumentException("Query string can be either pending, approved or denied");
-                } else {
-                    List<Reimbursement> allReimbs = reimbursementDAO.findByUser_UserId(userId);
-                    return allReimbs.stream().filter(reimb -> reimb.getStatus().equals(status))
-                            .collect(Collectors.toList());
-                }
-            }
+            return getUserReimbursementsByStatus(outgoingReimbs, status);
+        }
+
+    }
+
+    public List<OutgoingReimbDTO> getUserReimbursementsByStatus(List<OutgoingReimbDTO> outgoingReimbs, String status){
+        if(!status.equalsIgnoreCase("pending")
+                && !status.equalsIgnoreCase("approved")
+                && !status.equalsIgnoreCase("denied")
+        ){
+            throw new IllegalArgumentException("Query string can be either pending, approved or denied");
+        } else {
+            return outgoingReimbs.stream().filter(reimb -> reimb.getStatus().equals(status))
+                    .collect(Collectors.toList());
         }
     }
 
 
-    public User deleteUser(int userId){
+    public OutgoingUserDTO deleteUser(int userId){
         Optional<User> user = userDAO.findById(userId);
         if(!user.isEmpty()){
             userDAO.deleteById(userId);
-            return user.get();
+            return new OutgoingUserDTO(
+                    user.get().getUserId(),
+                    user.get().getUserName(),
+                    user.get().getRole()
+            );
         }
 
        throw new IllegalArgumentException("Failed to delete record from the database, check Id and try again");
     }
 
 
-    public User updateUserRole(int userId, String role){
+    public OutgoingUserDTO updateUserRole(int userId, String role){
         Optional<User> user = userDAO.findById(userId);
 
         if(!user.isEmpty() && role != null && (role.equalsIgnoreCase("manager") || role.equalsIgnoreCase("employee"))){
             user.get().setRole(role);
-            return userDAO.save(user.get());
+            User updatedUser = userDAO.save(user.get());
+
+            return new OutgoingUserDTO(
+                    updatedUser.getUserId(),
+                    updatedUser.getUserName(),
+                    updatedUser.getRole()
+            );
         }
 
        throw new IllegalArgumentException("Failed to change role. Make sure Id is correct and roles are either 'employee' or 'manager'");

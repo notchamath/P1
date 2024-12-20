@@ -16,4 +16,11 @@ public class Project1Application {
 		SpringApplication.run(Project1Application.class, args);
 	}
 
+
+	//TODO:
+	// outgoingReimbDTO
+	// Check each action with logged in user's id
+	// Clean up error handling
+	// Test all endpoints (not logged in, as employee, as manager)
+
 }
