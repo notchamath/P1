@@ -6,8 +6,10 @@ import com.revature.models.User;
 import com.revature.repositories.ReimbursementDAO;
 import com.revature.repositories.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,6 +54,10 @@ public class ReimbursementService {
             reimbursement.setUser(user.get());
             return reimbursementDAO.save(reimbursement);
         }
+    }
+
+    public List<Reimbursement> getAllReimbursements(){
+        return reimbursementDAO.findAll(Sort.by("reimbId").ascending());
     }
 
     public Reimbursement updateReimbDescription(int reimbId, String descriptionText){

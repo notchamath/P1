@@ -4,6 +4,7 @@ import com.revature.models.Reimbursement;
 import com.revature.models.User;
 import com.revature.repositories.ReimbursementDAO;
 import com.revature.repositories.UserDAO;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,6 +46,10 @@ public class UserService {
         }
 
         return userDAO.save(user);
+    }
+
+    public List<User> getAllUsers(){
+        return userDAO.findAll(Sort.by("userId").ascending());
     }
 
 

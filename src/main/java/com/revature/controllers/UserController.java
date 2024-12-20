@@ -29,10 +29,15 @@ public class UserController {
         return ResponseEntity.ok(registeredUser);
     }
 
+    //Get all users
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers(){
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     //Get user their own reimbursements
     @GetMapping("/{userId}/reimbursements")
     public ResponseEntity<List<Reimbursement>> getUserReimbursements(@PathVariable("userId") int userId, @RequestParam(value = "status", required = false) String status){
-
         return ResponseEntity.ok(userService.getUserReimbursements(userId, status));
     }
 }
