@@ -30,17 +30,25 @@ public class ReimbursementController {
         return ResponseEntity.ok(reimbursement);
     }
 
-    //Get All Reimbursements
+    //Get All Reimbursements, can filter by status of reimbursement
     @GetMapping
-    public ResponseEntity<List<Reimbursement>> getAllReimbursements(){
-        return ResponseEntity.ok(reimbursementService.getAllReimbursements());
+    public ResponseEntity<List<Reimbursement>> getAllReimbursements(@RequestParam(value = "status", required = false) String status){
+        return ResponseEntity.ok(reimbursementService.getAllReimbursements(status));
     }
 
-    //Update Reimbursement Description
+    //Update Reimbursement Description if it's still pending
     @PatchMapping("/{reimbId}/description")
     ResponseEntity<Reimbursement> updateReimbDescription(@PathVariable int reimbId, @RequestBody Map<String, Object> newReimbDetails){
         String descriptionText = (String) newReimbDetails.get("descriptionText");
 
         return ResponseEntity.ok(reimbursementService.updateReimbDescription(reimbId, descriptionText));
+    }
+
+    //Update Reimbursement Status
+    @PatchMapping("/{reimbId}/status")
+    ResponseEntity<Reimbursement> updateReimbStatus(@PathVariable int reimbId, @RequestBody Map<String, Object> newReimbDetails){
+        String status = (String) newReimbDetails.get("status");
+
+        return ResponseEntity.ok(reimbursementService.updateReimbStatus(reimbId, status));
     }
 }

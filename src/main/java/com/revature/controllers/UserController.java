@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -35,9 +36,25 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    //Get user their own reimbursements
+    //Get user their own reimbursements, can filter by status of reimbursement
     @GetMapping("/{userId}/reimbursements")
     public ResponseEntity<List<Reimbursement>> getUserReimbursements(@PathVariable("userId") int userId, @RequestParam(value = "status", required = false) String status){
         return ResponseEntity.ok(userService.getUserReimbursements(userId, status));
+    }
+
+    // Delete User
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<User> deleteUser(@PathVariable int userId){
+        User deletedUser = userService.deleteUser(userId);
+
+        return ResponseEntity.ok(deletedUser);
+    }
+
+    //Update User role
+    @PatchMapping("/{userId}/role")
+    ResponseEntity<User> updateUserRole(@PathVariable int userId, @RequestBody Map<String, Object> role){
+        String newRole = (String) role.get("role");
+
+        return ResponseEntity.ok(userService.updateUserRole(userId, newRole));
     }
 }

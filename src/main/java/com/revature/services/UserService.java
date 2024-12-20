@@ -7,6 +7,7 @@ import com.revature.repositories.UserDAO;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ public class UserService {
         return userDAO.save(user);
     }
 
+
     public List<User> getAllUsers(){
         return userDAO.findAll(Sort.by("userId").ascending());
     }
@@ -77,5 +79,28 @@ public class UserService {
                 }
             }
         }
+    }
+
+
+    public User deleteUser(int userId){
+        Optional<User> user = userDAO.findById(userId);
+        if(!user.isEmpty()){
+            userDAO.deleteById(userId);
+            return user.get();
+        }
+
+       throw new IllegalArgumentException("Failed to delete record from the database, check Id and try again");
+    }
+
+
+    public User updateUserRole(int userId, String role){
+        Optional<User> user = userDAO.findById(userId);
+
+        if(!user.isEmpty() && role != null && (role.equalsIgnoreCase("manager") || role.equalsIgnoreCase("employee"))){
+            user.get().setRole(role);
+            return userDAO.save(user.get());
+        }
+
+       throw new IllegalArgumentException("Failed to change role. Make sure Id is correct and roles are either 'employee' or 'manager'");
     }
 }
