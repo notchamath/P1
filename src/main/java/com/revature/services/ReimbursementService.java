@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.models.DTOs.IncomingReimbDTO;
+import com.revature.models.DTOs.OutgoingReimbDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.User;
 import com.revature.repositories.ReimbursementDAO;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ public class ReimbursementService {
         this.userDAO = userDAO;
     }
 
-    public Reimbursement createReimbursement(IncomingReimbDTO reimbDTO, int loggedInUserId){
+    public OutgoingReimbDTO createReimbursement(IncomingReimbDTO reimbDTO, int loggedInUserId){
 
         if(reimbDTO.getDescription() == null || reimbDTO.getDescription().isBlank()){
             throw new IllegalArgumentException("Reimbursement Description cannot be blank or null");
@@ -57,47 +59,84 @@ public class ReimbursementService {
             throw new IllegalArgumentException("No user is found by the Id: " + reimbDTO.getUserId());
         } else {
             reimbursement.setUser(user.get());
-            return reimbursementDAO.save(reimbursement);
+            Reimbursement savedReimb = reimbursementDAO.save(reimbursement);
+            return new OutgoingReimbDTO(
+                    savedReimb.getReimbId(),
+                    savedReimb.getDescription(),
+                    savedReimb.getAmount(),
+                    savedReimb.getStatus(),
+                    savedReimb.getUser().getUserId()
+            );
         }
     }
 
-    public List<Reimbursement> getAllReimbursements(String status){
+    public List<OutgoingReimbDTO> getAllReimbursements(String status){
+        List<Reimbursement> reimbs = reimbursementDAO.findAll(Sort.by("reimbId").ascending());
+        List<OutgoingReimbDTO> outgoingReimbs = new ArrayList<>();
+
+        for(Reimbursement reimb: reimbs){
+            outgoingReimbs.add(
+                    new OutgoingReimbDTO(
+                            reimb.getReimbId(),
+                            reimb.getDescription(),
+                            reimb.getAmount(),
+                            reimb.getStatus(),
+                            reimb.getUser().getUserId()
+                    )
+            );
+        }
+
         if(status == null || status.isEmpty()) {
-            return reimbursementDAO.findAll(Sort.by("reimbId").ascending());
+            return outgoingReimbs;
         } else {
-            if(!status.equalsIgnoreCase("pending")
-                    && !status.equalsIgnoreCase("approved")
-                    && !status.equalsIgnoreCase("denied")
-            ){
-                throw new IllegalArgumentException("Query string can be either pending, approved or denied");
-            } else {
-                List<Reimbursement> allReimbs = reimbursementDAO.findAll();
-                return allReimbs.stream().filter(reimb -> reimb.getStatus().equals(status))
-                        .collect(Collectors.toList());
-            }
+            return getAllReimbursementsByStatus(outgoingReimbs, status);
         }
     }
 
-    public Reimbursement updateReimbDescription(int reimbId, String descriptionText, int loggedInUserId){
+    public List<OutgoingReimbDTO> getAllReimbursementsByStatus(List<OutgoingReimbDTO> outgoingReimbs, String status){
+        if(!status.equalsIgnoreCase("pending")
+                && !status.equalsIgnoreCase("approved")
+                && !status.equalsIgnoreCase("denied")
+        ){
+            throw new IllegalArgumentException("Query string can be either pending, approved or denied");
+        } else {
+            return outgoingReimbs.stream().filter(reimb -> reimb.getStatus().equals(status))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public OutgoingReimbDTO updateReimbDescription(int reimbId, String descriptionText, int loggedInUserId){
         Optional<Reimbursement> reimbOptional = reimbursementDAO.findById(reimbId);
 
-        if(!reimbOptional.isEmpty() && reimbOptional.get().getUser().getUserId() != loggedInUserId){
+        if(reimbOptional.isEmpty()){
+            throw new IllegalArgumentException("No Reimbursement found by the ID: " + reimbId);
+        }
+
+        if(reimbOptional.get().getUser().getUserId() != loggedInUserId){
             throw new IllegalArgumentException("The reimbursement entered does not belong to the logged in user with ID: " + loggedInUserId);
         }
 
-        if(!reimbOptional.isEmpty() && !reimbOptional.get().getStatus().equalsIgnoreCase("pending")){
-            throw new IllegalArgumentException("This reimbursement is has already been APPROVED or DENIED");
+        if(!reimbOptional.get().getStatus().equalsIgnoreCase("pending")){
+            throw new IllegalArgumentException("This reimbursement is has already been: " + reimbOptional.get().getStatus());
         }
 
-        if(!reimbOptional.isEmpty() && descriptionText != null && !descriptionText.isBlank() && descriptionText.length() <= 255){
+        if(descriptionText != null && !descriptionText.isBlank() && descriptionText.length() <= 255){
+
             reimbOptional.get().setDescription(descriptionText);
-            return reimbursementDAO.save(reimbOptional.get());
+            Reimbursement savedReimb = reimbursementDAO.save(reimbOptional.get());
+            return new OutgoingReimbDTO(
+                    savedReimb.getReimbId(),
+                    savedReimb.getDescription(),
+                    savedReimb.getAmount(),
+                    savedReimb.getStatus(),
+                    savedReimb.getUser().getUserId()
+            );
         } else {
             throw new IllegalArgumentException("Reimbursement could not be updated. Please check Description and ID");
         }
     }
 
-    public Reimbursement updateReimbStatus(int reimbId, String status){
+    public OutgoingReimbDTO updateReimbStatus(int reimbId, String status){
         Optional<Reimbursement> reimb = reimbursementDAO.findById(reimbId);
 
         if(reimb.isEmpty()) throw new IllegalArgumentException("No reimbursement found by Id: " + reimbId);
@@ -112,7 +151,14 @@ public class ReimbursementService {
                 || status.equalsIgnoreCase("denied")))
         {
             reimb.get().setStatus(status);
-            return reimbursementDAO.save(reimb.get());
+            Reimbursement savedReimb = reimbursementDAO.save(reimb.get());
+            return new OutgoingReimbDTO(
+                    savedReimb.getReimbId(),
+                    savedReimb.getDescription(),
+                    savedReimb.getAmount(),
+                    savedReimb.getStatus(),
+                    savedReimb.getUser().getUserId()
+            );
         } else {
             throw new IllegalArgumentException("Reimbursement could not be updated. Please check status and ID");
         }
