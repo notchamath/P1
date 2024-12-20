@@ -52,6 +52,16 @@ public class ReimbursementService {
             reimbursement.setUser(user.get());
             return reimbursementDAO.save(reimbursement);
         }
+    }
 
+    public Reimbursement updateReimbDescription(int reimbId, String descriptionText){
+        Optional<Reimbursement> reimb = reimbursementDAO.findById(reimbId);
+
+        if(!reimb.isEmpty() && descriptionText != null && !descriptionText.isBlank() && descriptionText.length() <= 255){
+            reimb.get().setDescription(descriptionText);
+            return reimbursementDAO.save(reimb.get());
+        } else {
+            throw new IllegalArgumentException("Reimbursement could not be updated. Please check Description and ID");
+        }
     }
 }

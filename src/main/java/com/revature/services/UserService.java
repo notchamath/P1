@@ -48,22 +48,29 @@ public class UserService {
     }
 
 
-    public List<Reimbursement> getUserReimbursements(int userId){
-        if(userId < 0) throw new IllegalArgumentException("User ID is not valid");
+    public List<Reimbursement> getUserReimbursements(int userId, String status){
+
+        if (userId < 0) throw new IllegalArgumentException("User ID is not valid");
 
         Optional<User> foundUser = userDAO.findById(userId);
 
-        if(foundUser.isEmpty()) {
+        if (foundUser.isEmpty()) {
             throw new IllegalArgumentException("No user found by that ID");
         } else {
-            return reimbursementDAO.findByUser_UserId(userId);
+            if(status == null || status.isEmpty()) {
+                return reimbursementDAO.findByUser_UserId(userId);
+            } else {
+                if(!status.equalsIgnoreCase("pending")
+                        && !status.equalsIgnoreCase("approved")
+                        && !status.equalsIgnoreCase("denied")
+                ){
+                    throw new IllegalArgumentException("Query string can be either pending, approved or denied");
+                } else {
+                    List<Reimbursement> allReimbs = reimbursementDAO.findByUser_UserId(userId);
+                    return allReimbs.stream().filter(reimb -> reimb.getStatus().equals(status))
+                            .collect(Collectors.toList());
+                }
+            }
         }
-
-    }
-
-    public List<Reimbursement> getUserPendingReimbursements(int userId){
-        List<Reimbursement> allReimbs = getUserReimbursements(userId);
-        return allReimbs.stream().filter(reimb -> reimb.getStatus().equals("pending"))
-                                                        .collect(Collectors.toList());
     }
 }

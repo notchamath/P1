@@ -21,6 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    // Register User
     @PostMapping
     public ResponseEntity<User> registerUser(@RequestBody User user){
         User registeredUser = userService.registerUser(user);
@@ -28,16 +29,10 @@ public class UserController {
         return ResponseEntity.ok(registeredUser);
     }
 
+    //Get user their own reimbursements
     @GetMapping("/{userId}/reimbursements")
-    public ResponseEntity<List<Reimbursement>> getUserReimbursements(@PathVariable("userId") int userId){
+    public ResponseEntity<List<Reimbursement>> getUserReimbursements(@PathVariable("userId") int userId, @RequestParam(value = "status", required = false) String status){
 
-        return ResponseEntity.ok(userService.getUserReimbursements(userId));
+        return ResponseEntity.ok(userService.getUserReimbursements(userId, status));
     }
-
-    @GetMapping("/{userId}/reimbursements/pending")
-    public ResponseEntity<List<Reimbursement>> getUserPendingReimbursements(@PathVariable("userId") int userId){
-
-        return ResponseEntity.ok(userService.getUserPendingReimbursements(userId));
-    }
-
 }

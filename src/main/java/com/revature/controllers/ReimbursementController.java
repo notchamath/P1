@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/reimbursements")
 @CrossOrigin
@@ -19,6 +21,7 @@ public class ReimbursementController {
         this.reimbursementService = reimbursementService;
     }
 
+    //Create Reimbursement
     @PostMapping
     public ResponseEntity<Reimbursement> createReimbursement(@RequestBody IncomingReimbDTO reimbDTO){
         Reimbursement reimbursement = reimbursementService.createReimbursement(reimbDTO);
@@ -26,4 +29,11 @@ public class ReimbursementController {
         return ResponseEntity.ok(reimbursement);
     }
 
+    //Update Reimbursement Description
+    @PatchMapping("/{reimbId}/description")
+    ResponseEntity<Reimbursement> updateReimbDescription(@PathVariable int reimbId, @RequestBody Map<String, Object> newReimbDetails){
+        String descriptionText = (String) newReimbDetails.get("descriptionText");
+
+        return ResponseEntity.ok(reimbursementService.updateReimbDescription(reimbId, descriptionText));
+    }
 }
