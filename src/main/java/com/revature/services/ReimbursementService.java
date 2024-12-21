@@ -42,7 +42,7 @@ public class ReimbursementService {
         }
 
         if(reimbDTO.getUserId() != loggedInUserId){
-            throw new IllegalArgumentException("Reimbursement can only belong to the logged in user");
+            throw new IllegalArgumentException("You cannot create a Reimbursement for a different user. Enter the correct userId");
         }
 
         Reimbursement reimbursement = new Reimbursement(

@@ -6,6 +6,7 @@ import com.revature.models.DTOs.OutgoingUserDTO;
 import com.revature.models.Reimbursement;
 import com.revature.models.User;
 import com.revature.services.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@CrossOrigin
+@CrossOrigin(value = "http://localhost:5173", allowCredentials = "true")
 public class UserController {
 
     private final UserService userService;
@@ -40,8 +41,13 @@ public class UserController {
 
     //Get user their own reimbursements, can filter by status of reimbursement
     @GetMapping("/{userId}/reimbursements")
-    public ResponseEntity<List<OutgoingReimbDTO>> getUserReimbursements(@PathVariable("userId") int userId, @RequestParam(value = "status", required = false) String status){
-        return ResponseEntity.ok(userService.getUserReimbursements(userId, status));
+    public ResponseEntity<List<OutgoingReimbDTO>> getUserReimbursements(@PathVariable("userId") int userId,
+                                                                        @RequestParam(value = "status",
+                                                                        required = false) String status,
+                                                                        HttpSession session
+                                                                        ){
+        int loggedInUserId = (int) session.getAttribute("userId");
+        return ResponseEntity.ok(userService.getUserReimbursements(userId, status, loggedInUserId));
     }
 
     // Delete User

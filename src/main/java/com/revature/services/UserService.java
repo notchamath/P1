@@ -6,6 +6,7 @@ import com.revature.models.Reimbursement;
 import com.revature.models.User;
 import com.revature.repositories.ReimbursementDAO;
 import com.revature.repositories.UserDAO;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -72,9 +73,10 @@ public class UserService {
     }
 
 
-    public List<OutgoingReimbDTO> getUserReimbursements(int userId, String status){
+    public List<OutgoingReimbDTO> getUserReimbursements(int userId, String status, int loggedInUserId){
 
         if (userId < 0) throw new IllegalArgumentException("User ID is not valid");
+        if (userId != loggedInUserId) throw new IllegalArgumentException("Logged in user requested Reimbursements of a different user");
 
         Optional<User> foundUser = userDAO.findById(userId);
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/reimbursements")
-@CrossOrigin
+@CrossOrigin(value = "http://localhost:5173", allowCredentials = "true")
 public class ReimbursementController {
 
     private final ReimbursementService reimbursementService;
