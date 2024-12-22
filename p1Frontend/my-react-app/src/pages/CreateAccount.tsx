@@ -105,8 +105,11 @@ const CreateAccount: React.FC = () => {
         </div>
         
         <div className="form-group">
-            <label htmlFor="role">Role</label>
-            <input type="text" id="role" onChange={storeValues} name="role" placeholder="Enter your role" />
+          <label htmlFor="role">Role</label>
+          <select id="role" className="form-control" onChange={storeValues} name="role">
+            <option value="employee">Employee</option>
+            <option value="manager">Manager</option>
+          </select>
         </div>
 
         <div className="form-group">
