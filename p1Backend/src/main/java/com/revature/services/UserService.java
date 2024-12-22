@@ -52,7 +52,7 @@ public class UserService {
 
         User newUser = userDAO.save(user);
 
-        return new OutgoingUserDTO(newUser.getUserId(), newUser.getUserName(), newUser.getRole());
+        return new OutgoingUserDTO(newUser.getUserId(), newUser.getUserName(), newUser.getRole(), newUser.getFirstName(), newUser.getLastName());
     }
 
 
@@ -65,7 +65,9 @@ public class UserService {
             outgoingUsers.add(new OutgoingUserDTO(
                     user.getUserId(),
                     user.getUserName(),
-                    user.getRole()
+                    user.getRole(),
+                    user.getFirstName(),
+                    user.getLastName()
             ));
         }
 
@@ -126,7 +128,9 @@ public class UserService {
             return new OutgoingUserDTO(
                     user.get().getUserId(),
                     user.get().getUserName(),
-                    user.get().getRole()
+                    user.get().getRole(),
+                    user.get().getFirstName(),
+                    user.get().getLastName()
             );
         }
 
@@ -144,7 +148,9 @@ public class UserService {
             return new OutgoingUserDTO(
                     updatedUser.getUserId(),
                     updatedUser.getUserName(),
-                    updatedUser.getRole()
+                    updatedUser.getRole(),
+                    updatedUser.getFirstName(),
+                    updatedUser.getLastName()
             );
         }
 

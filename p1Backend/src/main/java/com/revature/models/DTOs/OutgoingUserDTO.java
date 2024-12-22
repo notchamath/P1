@@ -4,14 +4,19 @@ public class OutgoingUserDTO {
     private int userId;
     private String username;
     private String role;
+    private String firstName;
+    private String lastName;
 
+    // Constructors, Getters, and Setters
     public OutgoingUserDTO() {
     }
 
-    public OutgoingUserDTO(int userId, String username, String role) {
+    public OutgoingUserDTO(int userId, String username, String role, String firstName, String lastName) {
         this.userId = userId;
         this.username = username;
         this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public int getUserId() {
@@ -38,4 +43,19 @@ public class OutgoingUserDTO {
         this.role = role;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 }
