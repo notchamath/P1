@@ -22,7 +22,7 @@ const MyReimbursements: React.FC = () => {
 
   const getMyReimbursements = async () => {
     try {
-      const response = await axios.get(`http://localhost:4444/reimbursements/${loggedInUserId}`, {
+      const response = await axios.get(`http://localhost:4444/users/${loggedInUserId}/reimbursements`, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -44,7 +44,7 @@ const MyReimbursements: React.FC = () => {
     if (editingReimbId && newDescription) {
       try {
         await axios.post(
-          `http://localhost:4444/reimbursements/updateDescription/${editingReimbId}`,
+          `http://localhost:4444/reimbursements/${editingReimbId}/description`,
           newDescription,
           {
             withCredentials: true,

@@ -22,12 +22,12 @@ const MyPendingReimbursements: React.FC = () => {
 
   const getMyReimbursements = async () => {
     try {
-      const response = await axios.get(`http://localhost:4444/reimbursements/pending/${loggedInUserId}`, {
+      const response = await axios.get(`http://localhost:4444/users/${loggedInUserId}/reimbursements?status=PENDING`, {
         withCredentials: true,
       });
       console.log(response.data);
       const myReimbursements = response.data.filter(
-        (reimbursement: ReimbursementInterface) => reimbursement.user.userId === loggedInUserId
+        (reimbursement: ReimbursementInterface) => reimbursement.user?.userId === loggedInUserId
       );
       setReimbursements(myReimbursements);
     } catch (error) {
@@ -44,7 +44,7 @@ const MyPendingReimbursements: React.FC = () => {
     if (editingReimbId && newDescription) {
       try {
         await axios.post(
-          `http://localhost:4444/reimbursements/updateDescription/${editingReimbId}`,
+          `http://localhost:4444/reimbursements/${editingReimbId}/description`,
           newDescription,
           {
             withCredentials: true,
@@ -120,7 +120,7 @@ const MyPendingReimbursements: React.FC = () => {
                 </td>
                 <td>{reimbursement.amount}</td>
                 <td>{reimbursement.status}</td>
-                <td>{reimbursement.user.userId}</td>
+                <td>{reimbursement.user ? reimbursement.user.userId : 'N/A'}</td>
                 <td>
                   {editingReimbId === reimbursement.reimbId ? (
                     <>

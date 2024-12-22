@@ -17,10 +17,10 @@ const ListReimbursements: React.FC = () => {
 
   const getAllReimbursements = async () => {
     try {
-      const response = await axios.get("http://localhost:4444/reimbursements/pending", {
+      const response = await axios.get("http://localhost:4444/reimbursements?status=approved", {
         withCredentials: true,
       });
-      console.log(response.data);
+      console.log("Fetched reimbursements:", response.data);
       setReimbursements(response.data);
     } catch (error) {
       console.error("There was an error fetching the reimbursements!", error);
@@ -73,23 +73,29 @@ const ListReimbursements: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {reimbursements.map((reimbursement) => (
-              <tr key={reimbursement.reimbId}>
-                <td>{reimbursement.reimbId}</td>
-                <td>{reimbursement.description}</td>
-                <td>{reimbursement.amount}</td>
-                <td>{reimbursement.status}</td>
-                <td>{reimbursement.user.userId}</td>
-                <td>
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => handleUpdateStatus(reimbursement.reimbId!)}
-                  >
-                    Update Status
-                  </button>
-                </td>
+            {reimbursements.length > 0 ? (
+              reimbursements.map((reimbursement) => (
+                <tr key={reimbursement.reimbId}>
+                  <td>{reimbursement.reimbId}</td>
+                  <td>{reimbursement.description || 'N/A'}</td>
+                  <td>{reimbursement.amount || 'N/A'}</td>
+                  <td>{reimbursement.status || 'N/A'}</td>
+                  <td>{reimbursement.user ? reimbursement.user.userId : 'N/A'}</td>
+                  <td>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => handleUpdateStatus(reimbursement.reimbId!)}
+                    >
+                      Update Status
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="text-center">No pending reimbursements found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
