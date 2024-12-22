@@ -27,7 +27,7 @@ const MyPendingReimbursements: React.FC = () => {
       });
       console.log(response.data);
       const myReimbursements = response.data.filter(
-        (reimbursement: ReimbursementInterface) => reimbursement.user?.userId === loggedInUserId
+        (reimbursement: ReimbursementInterface) => reimbursement.userId === loggedInUserId
       );
       setReimbursements(myReimbursements);
     } catch (error) {
@@ -120,7 +120,7 @@ const MyPendingReimbursements: React.FC = () => {
                 </td>
                 <td>{reimbursement.amount}</td>
                 <td>{reimbursement.status}</td>
-                <td>{reimbursement.user ? reimbursement.user.userId : 'N/A'}</td>
+                <td>{reimbursement.userId}</td>
                 <td>
                   {editingReimbId === reimbursement.reimbId ? (
                     <>
