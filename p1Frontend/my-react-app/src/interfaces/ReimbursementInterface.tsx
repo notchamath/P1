@@ -5,5 +5,5 @@ export interface ReimbursementInterface {
     description: string;
     amount: number;
     status: string;
-    user: UserInterface; // This links the reimbursement to a specific user
+    userId: number; // This links the reimbursement to a specific user
 }

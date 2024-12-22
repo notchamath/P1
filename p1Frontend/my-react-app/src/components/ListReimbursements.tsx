@@ -79,7 +79,7 @@ const ListReimbursements: React.FC = () => {
                 <td>{reimbursement.description}</td>
                 <td>{reimbursement.amount}</td>
                 <td>{reimbursement.status}</td>
-                <td>{reimbursement.user ? reimbursement.user.userId : 'N/A'}</td>
+                <td>{reimbursement.userId}</td>
                 <td>
                   <button
                     className="btn btn-primary"

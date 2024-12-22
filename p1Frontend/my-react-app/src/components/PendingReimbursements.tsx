@@ -17,7 +17,7 @@ const ListReimbursements: React.FC = () => {
 
   const getAllReimbursements = async () => {
     try {
-      const response = await axios.get("http://localhost:4444/reimbursements?status=approved", {
+      const response = await axios.get("http://localhost:4444/reimbursements?status=pending", {
         withCredentials: true,
       });
       console.log("Fetched reimbursements:", response.data);
@@ -80,7 +80,7 @@ const ListReimbursements: React.FC = () => {
                   <td>{reimbursement.description || 'N/A'}</td>
                   <td>{reimbursement.amount || 'N/A'}</td>
                   <td>{reimbursement.status || 'N/A'}</td>
-                  <td>{reimbursement.user ? reimbursement.user.userId : 'N/A'}</td>
+                  <td>{reimbursement.userId}</td>
                   <td>
                     <button
                       className="btn btn-primary"
