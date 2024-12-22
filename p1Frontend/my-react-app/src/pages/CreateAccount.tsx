@@ -50,9 +50,9 @@ const CreateAccount: React.FC = () => {
       return;
     }
 
-    // Create the user object
+    // Create the user object with the correct field name
     const newUser = {
-      username,
+      userName: username,
       password,
       firstName,
       lastName,
@@ -61,8 +61,12 @@ const CreateAccount: React.FC = () => {
 
     try {
       // Send a POST request to the backend
-      const response = await axios.post("http://localhost:4444/users", newUser);
-      if (response.status === 201) { // Assuming 201 Created is the success status code
+      const response = await axios.post("http://localhost:4444/users", newUser, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.status === 201 || response.status === 200) { // Assuming 201 Created or 200 OK is the success status code
         alert("Account created successfully! Please log in to use your account");
         navigate("/login");
       }
