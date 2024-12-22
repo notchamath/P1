@@ -17,7 +17,6 @@ public class AuthService {
         this.authDAO = authDAO;
     }
 
-
     public OutgoingUserDTO login(LoginDTO loginDTO){
         User user = authDAO.findByUserNameAndPassword(
                 loginDTO.getUsername(), loginDTO.getPassword()
@@ -27,6 +26,12 @@ public class AuthService {
             throw new IllegalArgumentException("No user found with those credentials");
         }
 
-        return new OutgoingUserDTO(user.getUserId(), user.getUserName(), user.getRole());
+        return new OutgoingUserDTO(
+                user.getUserId(),
+                user.getUserName(),
+                user.getRole(),
+                user.getFirstName(),
+                user.getLastName()
+        );
     }
 }
