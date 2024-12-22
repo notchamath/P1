@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-function App() {
-  const [count, setCount] = useState(0)
+import Navbar from './components/Navbar';
+import Login from './pages/Login';
+import CreateAccount from './pages/CreateAccount';
+import HomePage from './pages/Home';
+import ListUsers from './components/ListUsers';
+import ListReimbursements from './components/ListReimbursements';
+import PendingReimbursements from './components/PendingReimbursements';
+import MyReimbursements from './components/MyReimbursements';
+import MyPendingReimbursements from './components/myPendingReimbursements';
+
+const App: React.FC = () => {
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <div className="container mx-auto mt-4">
+        <Routes>
+          {/* Redirect to Login by default */}
+          <Route path="/" element={<Navigate to="/login" />} />
+          {/* Login Page */}
+          <Route path="/login" element={<Login />} />
+          {/* Create Account Page */}
+          <Route path="/create-account" element={<CreateAccount />} />
+          {/* Home Page */}
+          <Route path="/home" element={<HomePage />} />
+          {/* List Users Page */}
+          <Route path="/listUsers" element={<ListUsers />} />
+          {/* List Reimbursements Page */}
+          <Route path="/listReimbursements" element={<ListReimbursements />} />
+          {/* Pending Reimbursements Page */}
+          <Route path="/pendingReimbursements" element={<PendingReimbursements />} />
+          {/* My Reimbursements Page */}
+          <Route path="/myReimbursements" element={<MyReimbursements />} />
+          {/* My Pending Reimbursements Page */}
+          <Route path="/myPendingReimbursements" element={<MyPendingReimbursements />} />
 
-export default App
+          {/* Add other routes as needed */}
+        </Routes>
+      </div>
+    </Router>
+  );
+};
+
+export default App;

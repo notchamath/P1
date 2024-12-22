@@ -1,42 +1,195 @@
-#root {
-  max-width: 1280px;
+
+/* App.css */
+body {
+    background-color: #d3d3d3;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+/* Basic styles for the navbar */
+.navbar {
+  background-color: #1e3a8a; /* Tailwind's blue-800 color */
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.navbar-brand {
+  color: white !important;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.navbar-links {
+  display: flex;
+  gap: 16px;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+  color: #e2e8f0; /* Tailwind's gray-200 color */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .navbar-container {
+      flex-direction: column;
+      align-items: flex-start;
   }
-  to {
-    transform: rotate(360deg);
+
+  .navbar-links {
+      flex-direction: column;
+      width: 100%;
+      margin-top: 8px;
+  }
+
+  .navbar-links a {
+      padding: 8px 0;
   }
 }
+/* End navbar */
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Container for the login/create account form */
+/* App.css */
+
+/* Container for the login/create account form */
+.form-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #1e3a8a; /* Darker blue */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.card {
-  padding: 2em;
+.form-container h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.75rem;
+    font-weight: 600;
 }
 
-.read-the-docs {
-  color: #888;
+.form-group {
+    margin-bottom: 20px; /* Added more spacing between input fields */
 }
+
+.form-group label {
+    color: white;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%; /* Make inputs fill the container width */
+    padding: 8px; 
+    margin-right: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #3b82f6; /* Blue border on focus */
+}
+
+.form-group button {
+    width: 100%; /* Make button fill the container width */
+    padding: 12px;
+    background-color: #2563eb; /* Slightly darker blue for button */
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-group button:hover {
+    background-color: #1e40af; /* Even darker blue on hover */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.form-group.link {
+    color: white; /* Changed span text color to white */
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.form-group.link a {
+    color: white; /* White color for the "Create Account" link */
+    text-decoration: none;
+    font-weight: 500;
+    background-color: transparent;
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.form-group.link a:hover {
+    background-color: #3b82f6; /* White background on hover */
+    color: white; /* Blue text color on hover */
+    text-decoration: none; /* Remove underline on hover */
+}
+
+.form-group.link span {
+    color: white;
+}
+
+/* Create Account button specific styles */
+.form-group.create-account-button {
+    background-color: white; /* White background for the button */
+    color: white; /* Blue text color */
+}
+
+.form-group.create-account-button:hover {
+    background-color: #e2e8f0; /* Light gray on hover */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .form-container {
+        width: 90%; /* Makes the form container almost full width on small screens */
+        margin: 20px auto; /* Reduces the margin for a better fit on small screens */
+        padding: 15px; /* Adjusts the padding for a more compact look */
+    }
+
+    .form-container h2 {
+        font-size: 1.5rem; /* Slightly reduces the font size of the header */
+    }
+
+    .form-group input, .form-group button {
+        font-size: 0.875rem; /* Adjusts the font size for inputs and buttons */
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 10px; /* Further reduces padding for very small screens */
+    }
+
+    .form-container h2 {
+        font-size: 1.25rem; /* Further reduces the font size of the header */
+    }
+}
+
+/* End of Log In/create */
