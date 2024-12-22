@@ -3,7 +3,11 @@ import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import { store } from "../globalData/store";
 
-const CreateReimbursement: React.FC = () => {
+interface CreateReimbursementProps {
+  onReimbursementCreated: () => void;
+}
+
+const CreateReimbursement: React.FC<CreateReimbursementProps> = ({ onReimbursementCreated }) => {
   const [showModal, setShowModal] = useState(false);
   const [description, setDescription] = useState<string>("");
   const [amount, setAmount] = useState<number | null>(null);
@@ -28,6 +32,8 @@ const CreateReimbursement: React.FC = () => {
         console.log("Reimbursement created successfully!");
         alert("Reimbursement created successfully!");
         setShowModal(false); // Close the modal after creation
+
+        onReimbursementCreated();
       } catch (error) {
         console.error("There was an error creating the reimbursement!", error);
       }

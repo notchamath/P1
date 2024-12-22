@@ -10,12 +10,13 @@ const ListUsers: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null); // Store the logged-in user's ID
   const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsers();
-    getLoggedInUser(); // Fetch the logged-in user's ID
+    // getLoggedInUser(); // Fetch the logged-in user's ID
   }, []);
 
   const getAllUsers = async () => {
@@ -30,16 +31,16 @@ const ListUsers: React.FC = () => {
     }
   };
 
-  const getLoggedInUser = async () => {
-    try {
-      const response = await axios.get("http://localhost:4444/users/loggedInUser", {
-        withCredentials: true,
-      });
-      setLoggedInUserId(response.data.userId);
-    } catch (error) {
-      console.error("There was an error fetching the logged-in user!", error);
-    }
-  };
+  // const getLoggedInUser = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:4444/users/loggedInUser", {
+  //       withCredentials: true,
+  //     });
+  //     setLoggedInUserId(response.data.userId);
+  //   } catch (error) {
+  //     console.error("There was an error fetching the logged-in user!", error);
+  //   }
+  // };
 
   const handleDeleteUser = (userId: number) => {
     setSelectedUserId(userId);
@@ -61,21 +62,26 @@ const ListUsers: React.FC = () => {
     }
   };
 
-  const handleUpdateRole = (userId: number) => {
-    setSelectedUserId(userId);
-    setShowUpdateModal(true);
+  const handleUpdateRole = (userId: number | undefined, role: string) => {
+
+    if(typeof userId === "number"){
+
+      setSelectedUserId(userId);
+      setSelectedRole(role);
+      setShowUpdateModal(true);
+    }
   };
 
   const updateRole = async (role: string) => {
     if (selectedUserId) {
       try {
         await axios.patch(
-          `http://localhost:4444/users/updateRole/${selectedUserId}`,
-          role, // Sending the new role as a plain string
+          `http://localhost:4444/users/${selectedUserId}/role`,
+          {"role": role}, // Sending the new role as a plain string
           {
             withCredentials: true,
             headers: {
-              'Content-Type': 'text/plain', // Setting the Content-Type to plain text
+              'Content-Type': 'application/json', // Setting the Content-Type to plain text
             },
           }
         );
@@ -129,7 +135,7 @@ const ListUsers: React.FC = () => {
                       </button>
                       <button
                         className="btn btn-primary"
-                        onClick={() => handleUpdateRole(user.userId!)}
+                        onClick={() => handleUpdateRole(user.userId, user.role)}
                       >
                         Update Role
                       </button>
@@ -168,12 +174,15 @@ const ListUsers: React.FC = () => {
         <Modal.Body>
           <p>Select a new role for user with ID: {selectedUserId}</p>
           <div className="d-flex justify-content-between">
+
+            {selectedRole==="employee"?
             <Button variant="primary" onClick={() => updateRole("manager")}>
               Manager
-            </Button>
+            </Button>:
             <Button variant="primary" onClick={() => updateRole("employee")}>
               Employee
             </Button>
+            } 
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>

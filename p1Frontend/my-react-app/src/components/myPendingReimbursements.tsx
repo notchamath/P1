@@ -22,7 +22,7 @@ const MyPendingReimbursements: React.FC = () => {
 
   const getMyReimbursements = async () => {
     try {
-      const response = await axios.get(`http://localhost:4444/users/${loggedInUserId}/reimbursements?status=PENDING`, {
+      const response = await axios.get(`http://localhost:4444/users/${loggedInUserId}/reimbursements?status=pending`, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -43,13 +43,12 @@ const MyPendingReimbursements: React.FC = () => {
   const handleUpdateDescription = async () => {
     if (editingReimbId && newDescription) {
       try {
-        await axios.post(
-          `http://localhost:4444/reimbursements/${editingReimbId}/description`,
-          newDescription,
+        await axios.patch(`http://localhost:4444/reimbursements/${editingReimbId}/description`,
+          { "descriptionText": newDescription}, // Sending the string directly as the request body
           {
             withCredentials: true,
             headers: {
-              'Content-Type': 'text/plain',
+              'Content-Type': 'application/json', // Set the Content-Type to plain text
             },
           }
         );
@@ -90,7 +89,7 @@ const MyPendingReimbursements: React.FC = () => {
       <div className="container mt-4">
         <h2 className="text-center">List of My Pending Reimbursements</h2>
         <div className="text-center mb-3"> {/* Centering within the container */}
-          <CreateReimbursement />
+          <CreateReimbursement onReimbursementCreated={getMyReimbursements} />
         </div>
         <table className="table table-striped table-bordered">
           <thead>
@@ -139,18 +138,13 @@ const MyPendingReimbursements: React.FC = () => {
                     </>
                   ) : (
                     <>
-                      <button
+                     <button
                         className="btn btn-primary me-2"
                         onClick={() => handleEditDescription(reimbursement.reimbId!, reimbursement.description)}
                       >
                         Edit
                       </button>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteReimbursement(reimbursement.reimbId!)}
-                      >
-                        Delete
-                      </button>
+                      
                     </>
                   )}
                 </td>

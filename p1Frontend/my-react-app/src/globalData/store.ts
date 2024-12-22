@@ -4,11 +4,10 @@ export const store: any = {
     //we typically want to store user session info on the front end
     //...for the sake of personalization, role-based behavior, and easier HTTP requests
     loggedInUser: {
-        userId: 0,
+        userId: -1,
         firstName: "",
         lastName: "",
         username: "",
-        password: "",
         role: ""
     } as UserInterface, 
 
