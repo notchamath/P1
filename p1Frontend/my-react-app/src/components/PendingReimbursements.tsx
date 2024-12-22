@@ -34,20 +34,20 @@ const ListReimbursements: React.FC = () => {
 
   const handleClose = () => setShowModal(false);
 
-  const handleAction = async (action: string) => {
+  const handleAction = async (status: string) => {
     if (selectedReimbId) {
         try {
-          await axios.post(
-            `http://localhost:4444/reimbursements/updateStatus/${selectedReimbId}`,
-            action, // Sending the string directly as the request body
+          await axios.patch(
+            `http://localhost:4444/reimbursements/${selectedReimbId}/status`,
+            { "status": status }, // Sending the string directly as the request body
             {
               withCredentials: true,
               headers: {
-                'Content-Type': 'text/plain', // Set the Content-Type to plain text
+                'Content-Type': 'application/json', // Set the Content-Type to plain text
               },
             }
           );
-        console.log(`Reimbursement ID ${selectedReimbId} updated to ${action}`);
+        console.log(`Reimbursement ID ${selectedReimbId} updated to ${status}`);
         getAllReimbursements(); // Refresh the list
         setShowModal(false);
       } catch (error) {
@@ -108,14 +108,11 @@ const ListReimbursements: React.FC = () => {
         <Modal.Body>
           <p>Select an action for reimbursement with ID: {selectedReimbId}</p> {/* Display the ID here */}
           <div className="d-flex justify-content-between">
-            <Button variant="success" onClick={() => handleAction("accepted")}>
+            <Button variant="success" onClick={() => handleAction("approved")}>
               Accept
             </Button>
             <Button variant="danger" onClick={() => handleAction("denied")}>
               Deny
-            </Button>
-            <Button variant="primary" onClick={() => handleAction("pending")}>
-              Pending
             </Button>
             <Button variant="secondary" onClick={handleClose}>
               Cancel
