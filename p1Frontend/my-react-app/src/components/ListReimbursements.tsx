@@ -77,7 +77,7 @@ const ListReimbursements: React.FC = () => {
               <tr key={reimbursement.reimbId}>
                 <td>{reimbursement.reimbId}</td>
                 <td>{reimbursement.description}</td>
-                <td>{reimbursement.amount}</td>
+                <td>${reimbursement.amount}</td>
                 <td>{reimbursement.status}</td>
                 <td>{reimbursement.userId}</td>
                 <td>

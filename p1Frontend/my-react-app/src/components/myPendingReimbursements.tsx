@@ -117,7 +117,7 @@ const MyPendingReimbursements: React.FC = () => {
                     reimbursement.description
                   )}
                 </td>
-                <td>{reimbursement.amount}</td>
+                <td>${reimbursement.amount}</td>
                 <td>{reimbursement.status}</td>
                 <td>{reimbursement.userId}</td>
                 <td>

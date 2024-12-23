@@ -13,9 +13,7 @@ import MyPendingReimbursements from './components/myPendingReimbursements';
 import { store } from './globalData/store';
 
 const App: React.FC = () => {
-
-  const isLoggedIn: boolean = store.loggedInUser.userId === -1? true: false;
-
+  
   return (
     <Router>
       <div className="container mx-auto ">
@@ -26,6 +24,7 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           {/* Create Account Page */}
           <Route path="/create-account" element={<CreateAccount />} />
+
           {/* Home Page */}
           <Route path="/home" element={<HomePage />} />
           {/* List Users Page */}

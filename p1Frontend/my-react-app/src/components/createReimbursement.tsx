@@ -68,7 +68,7 @@ const CreateReimbursement: React.FC<CreateReimbursementProps> = ({ onReimburseme
             </Form.Group>
 
             <Form.Group controlId="amount" className="mt-3">
-              <Form.Label>Amount</Form.Label>
+              <Form.Label>Amount ($)</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter amount"
