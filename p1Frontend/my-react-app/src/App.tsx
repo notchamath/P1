@@ -18,7 +18,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="container mx-auto mt-4">
+      <div className="container mx-auto ">
         <Routes>
           {/* Redirect to Login by default */}
           <Route path="/" element={<Navigate to="/login" />} />

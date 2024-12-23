@@ -13,7 +13,6 @@ const Navbar: React.FC = () => {
             Employee Reimbursement
           </Link>
           <div className="navbar-links">
-            <Link to="/home">Home</Link>
 
             {userType === 'manager' && (
               <>

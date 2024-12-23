@@ -122,7 +122,7 @@ const MyPendingReimbursements: React.FC = () => {
                 <td>{reimbursement.userId}</td>
                 <td>
                   {editingReimbId === reimbursement.reimbId ? (
-                    <>
+                    <div className="d-flex justify-content-evenly">
                       <button
                         className="btn btn-success"
                         onClick={handleUpdateDescription}
@@ -135,7 +135,7 @@ const MyPendingReimbursements: React.FC = () => {
                       >
                         Cancel
                       </button>
-                    </>
+                    </div>
                   ) : (
                     <>
                      <button
