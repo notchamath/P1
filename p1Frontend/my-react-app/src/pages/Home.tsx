@@ -1,15 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '../components/Navbar'; // Adjust the path based on your project structure
 import { store } from '../globalData/store';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const role = store.loggedInUser.role; 
   const username = store.loggedInUser.username;
   let x = ""
   if (role == 'manager') {
     x = "view and manage all users and their reimbursements.";
-  } else {
+  } else if (role == 'employee') {
     x ='submit, view, and update descriptions of your own reimbursements'
+  } else { 
+    useEffect(() => {
+      navigate("/login");
+    }, [navigate])
   }
 
   return (

@@ -4,12 +4,22 @@ import axios from "axios";
 import Navbar from "./Navbar";
 import { ReimbursementInterface } from '../interfaces/ReimbursementInterface';
 import { Modal, Button } from "react-bootstrap"; // Importing Bootstrap components
+import { store } from "../globalData/store";
 
 const ListReimbursements: React.FC = () => {
   const [reimbursements, setReimbursements] = useState<ReimbursementInterface[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedReimbId, setSelectedReimbId] = useState<number | null>(null);
   const navigate = useNavigate();
+
+
+  const user = store.loggedInUser.role;
+  if (user !== 'manager') { 
+    useEffect(() => {
+      navigate("/home");
+    }, [navigate])
+  }
+  
 
   useEffect(() => {
     getAllReimbursements();
@@ -109,7 +119,7 @@ const ListReimbursements: React.FC = () => {
           <p>Select an action for reimbursement with ID: {selectedReimbId}</p> {/* Display the ID here */}
           <div className="d-flex justify-content-between">
             <Button variant="success" onClick={() => handleAction("approved")}>
-              Accept
+              Approve
             </Button>
             <Button variant="danger" onClick={() => handleAction("denied")}>
               Deny

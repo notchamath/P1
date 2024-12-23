@@ -4,6 +4,7 @@ import axios from "axios";
 import Navbar from "./Navbar";
 import { UserInterface } from '../interfaces/UserInterface';
 import { Modal, Button } from "react-bootstrap";
+import { store } from "../globalData/store";
 
 const ListUsers: React.FC = () => {
   const [users, setUsers] = useState<UserInterface[]>([]);
@@ -13,6 +14,13 @@ const ListUsers: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [loggedInUserId, setLoggedInUserId] = useState<number | null>(null); // Store the logged-in user's ID
   const navigate = useNavigate();
+
+  const user = store.loggedInUser.role;
+  if (user !== 'manager') { 
+    useEffect(() => {
+      navigate("/home");
+    }, [navigate])
+  }
 
   useEffect(() => {
     getAllUsers();

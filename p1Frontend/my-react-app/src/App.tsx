@@ -10,10 +10,9 @@ import ListReimbursements from './components/ListReimbursements';
 import PendingReimbursements from './components/PendingReimbursements';
 import MyReimbursements from './components/MyReimbursements';
 import MyPendingReimbursements from './components/myPendingReimbursements';
-import { store } from './globalData/store';
 
 const App: React.FC = () => {
-  
+
   return (
     <Router>
       <div className="container mx-auto ">
@@ -27,12 +26,14 @@ const App: React.FC = () => {
 
           {/* Home Page */}
           <Route path="/home" element={<HomePage />} />
+          
           {/* List Users Page */}
           <Route path="/listUsers" element={<ListUsers />} />
           {/* List Reimbursements Page */}
           <Route path="/listReimbursements" element={<ListReimbursements />} />
           {/* Pending Reimbursements Page */}
           <Route path="/pendingReimbursements" element={<PendingReimbursements />} />
+
           {/* My Reimbursements Page */}
           <Route path="/myReimbursements" element={<MyReimbursements />} />
           {/* My Pending Reimbursements Page */}

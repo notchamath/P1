@@ -14,6 +14,13 @@ const MyPendingReimbursements: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reimbIdToDelete, setReimbIdToDelete] = useState<number | null>(null);
   const navigate = useNavigate();
+  const user = store.loggedInUser.role;
+  if (user !== 'manager' && user !== 'employee') { 
+    useEffect(() => {
+      navigate("/home");
+    }, [navigate])
+  }
+
   const loggedInUserId: number = store.loggedInUser.userId;
 
   useEffect(() => {
