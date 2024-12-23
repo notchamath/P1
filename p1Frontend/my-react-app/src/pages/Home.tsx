@@ -3,7 +3,6 @@ import Navbar from '../components/Navbar'; // Adjust the path based on your proj
 import { store } from '../globalData/store';
 
 const HomePage: React.FC = () => {
-  // Replace 'Employee' with the actual user type, e.g., 'Manager' or 'Employee'
   const role = store.loggedInUser.role; 
   const username = store.loggedInUser.username;
   let x = ""
@@ -13,14 +12,13 @@ const HomePage: React.FC = () => {
     x ='submit, view, and update descriptions of your own reimbursements'
   }
 
-
   return (
     <div>
       <Navbar/>
-      <div className="home-content">
-        <h1>Welcome to the Employement ERS, {username}! </h1>
-        <h2> As {role}, you get to {x}</h2>
-        {/* Add other content for your home page here */}
+      <div className="home-content text-center">
+        <h1>Welcome to the Employment ERS, {username}!</h1>
+        <h2>As {role}, you get to {x}</h2>
+        <img src="/ersLandingPage.jpg" alt="ERS Landing Page" className="img-fluid mt-4" /> {/* Add the landing page image */}
       </div>
     </div>
   );
