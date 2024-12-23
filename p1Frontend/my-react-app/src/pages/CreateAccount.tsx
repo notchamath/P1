@@ -70,9 +70,9 @@ const CreateAccount: React.FC = () => {
         alert("Account created successfully! Please log in to use your account");
         navigate("/login");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating account:", error);
-      alert("There was an issue creating your account. Please try again.");
+      alert("There was an issue creating your account. Please try again. " + error.response.data);
     }
   };
 

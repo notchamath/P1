@@ -10,8 +10,11 @@ import ListReimbursements from './components/ListReimbursements';
 import PendingReimbursements from './components/PendingReimbursements';
 import MyReimbursements from './components/MyReimbursements';
 import MyPendingReimbursements from './components/myPendingReimbursements';
+import { store } from './globalData/store';
 
 const App: React.FC = () => {
+
+  const isLoggedIn: boolean = store.loggedInUser.userId === -1? true: false;
 
   return (
     <Router>
